@@ -18,8 +18,9 @@ package main
 
 import ("fmt"
 	"io/ioutil"
+	"bufio"
+	"os"
 	)
-
 type sigData struct{
 	Title string
 	Data []byte
@@ -49,10 +50,11 @@ func main(){
 	m := new(sigData)
 
 	m.Title = "Test"
-	m.Data = mod[1084 + (1024 * 41): 8764 + (1024 * 41)]
-	for _, x := range m.Data{
-		fmt.Print(int8(x), ",")
-	}
-/*	b, _ := json.Marshal(m)
-	ioutil.WriteFile("test.json", b, 0644)*/
+	i := 3
+	m.Data = mod[1084 + (1024 * 41) + (i * 7680): 8764 + (1024 * 41) + (i * 7680)]
+	f, _ := os.Create("test3.file")
+	defer f.Close()
+	w := bufio.NewWriter(f)
+	fmt.Fprintln(w, "x = ", m.Data, "\nwavwrite(x, 22050, \"test\", i, \".wav\")")
+	w.Flush()
 }
